@@ -17,7 +17,7 @@ async function getAndSetImage() {
     } = await res.json();
 
     body.style.backgroundImage = `url('${img}')`;
-    author.insertAdjacentText("afterbegin", name);
+    author.insertAdjacentText("afterbegin", `By: ${name}`);
   } catch (err) {
     console.error(err);
   }
