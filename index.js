@@ -1,15 +1,14 @@
 const body = document.getElementById("body");
 const author = document.querySelector(".author");
+const cryptoHeader = document.querySelector(".crypto");
+
+const CRYPTO_BASE_URL = `https://api.coingecko.com/api/v3/coins/`;
 
 async function getAndSetImage() {
   try {
     const res = await fetch(
       ` https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature`
     );
-    /* 
-    const data = await res.json();
-
-    console.log(data); */
 
     const {
       urls: { regular: img },
@@ -25,4 +24,36 @@ async function getAndSetImage() {
   }
 }
 
+async function getCryptoData(cryptoId) {
+  try {
+    const res = await fetch(`${CRYPTO_BASE_URL}/${cryptoId}`);
+
+    if (!res.ok) throw Error("Status of request to coingecko - FAILED 😿");
+
+    const data = await res.json();
+
+    console.log(data);
+
+    const {
+      name,
+      image: { small: smallImg },
+      market_data: {
+        current_price: { usd: priceInUsd },
+      },
+    } = data;
+    console.log({ name, smallImg, priceInUsd });
+
+    cryptoHeader.innerHTML = `
+    <img src=${smallImg} alt='icon of crypto' />
+    <p>${name}: ${priceInUsd}</p>
+    `;
+  } catch (err) {
+    console.error(err);
+    cryptoHeader.insertAdjacentElement(
+      "afterbegin",
+      "Crypto Prices are not available at the moment 🙈"
+    );
+  }
+}
 getAndSetImage();
+getCryptoData(`ethereum`);
