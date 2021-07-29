@@ -45,3 +45,8 @@ main {
 .author-container {
   padding: 1em;
 }
+
+.time h3 {
+  font-size: 3em;
+  text-transform: uppercase;
+}

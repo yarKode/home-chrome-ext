@@ -1,6 +1,7 @@
 const body = document.getElementById("body");
 const author = document.querySelector(".author");
 const cryptoHeader = document.querySelector(".crypto");
+const timer = document.querySelector(".time h3");
 
 const CRYPTO_BASE_URL = `https://api.coingecko.com/api/v3/coins/`;
 
@@ -55,5 +56,24 @@ async function getCryptoData(cryptoId) {
     );
   }
 }
+
+function getTimeNow() {
+  const date = new Date();
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+function renderTime() {
+  timer.innerText = ("afterbegin", getTimeNow());
+}
+
+renderTime();
+setInterval(() => {
+  renderTime();
+}, 1000);
 getAndSetImage();
 getCryptoData(`ethereum`);
