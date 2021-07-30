@@ -5,6 +5,7 @@ const timer = document.querySelector(".time h3");
 const weatherContainer = document.querySelector(".weather");
 const tempContainer = document.querySelector(".temp");
 const locationContainer = document.querySelector(".location");
+const iconAndTempContainer = document.querySelector(".icon-and-temp");
 
 const CRYPTO_BASE_URL = `https://api.coingecko.com/api/v3/coins/`;
 
@@ -108,7 +109,7 @@ async function getWeather(lat, lon, units = "") {
       name: location,
     } = data;
     const icon = await getWeatherIcon(data.weather[0].icon);
-    renderWeather(icon, weatherContainer, temp, location);
+    renderWeather(icon, iconAndTempContainer, temp, location);
   } catch (err) {
     console.error(err);
   }

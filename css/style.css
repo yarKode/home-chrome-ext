@@ -52,6 +52,23 @@ main {
   flex-direction: column;
   align-items: flex-end;
 }
+.icon-and-temp {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.temp {
+  text-align: center;
+  font-size: 1.7em;
+}
+
+.locationContainer {
+  width: 100%;
+}
+.location {
+  text-align: center;
+}
 
 .time {
   margin: 0 auto;
