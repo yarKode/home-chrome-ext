@@ -71,9 +71,22 @@ function renderTime() {
   timer.innerText = ("afterbegin", getTimeNow());
 }
 
+function getCurrentLocation() {
+  if (!navigator.geolocation) return;
+  const data = navigator.geolocation.getCurrentPosition((data) => {
+    const {
+      coords: { latitude, longitude },
+    } = data;
+
+    console.log(latitude, longitude);
+  });
+}
+
+getAndSetImage();
+getCurrentLocation();
 renderTime();
 setInterval(() => {
   renderTime();
 }, 1000);
-getAndSetImage();
+
 getCryptoData(`ethereum`);
