@@ -2,13 +2,16 @@ const body = document.getElementById("body");
 const author = document.querySelector(".author");
 const cryptoHeader = document.querySelector(".crypto");
 const timer = document.querySelector(".time h3");
+const weatherContainer = document.querySelector(".weather");
+const tempContainer = document.querySelector(".temp");
+const locationContainer = document.querySelector(".location");
 
 const CRYPTO_BASE_URL = `https://api.coingecko.com/api/v3/coins/`;
 
 async function getAndSetImage() {
   try {
     const res = await fetch(
-      ` https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature`
+      ` https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=car`
     );
 
     const {
@@ -33,8 +36,6 @@ async function getCryptoData(cryptoId) {
 
     const data = await res.json();
 
-    console.log(data);
-
     const {
       name,
       image: { small: smallImg },
@@ -42,7 +43,6 @@ async function getCryptoData(cryptoId) {
         current_price: { usd: priceInUsd },
       },
     } = data;
-    console.log({ name, smallImg, priceInUsd });
 
     cryptoHeader.innerHTML = `
     <img src=${smallImg} alt='icon of crypto' />
@@ -61,14 +61,65 @@ function getTimeNow() {
   const date = new Date();
 
   const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
+  const minutes =
+    date.getMinutes().toString().length === 1
+      ? `0${date.getMinutes()}`
+      : date.getMinutes();
+  const seconds =
+    date.getSeconds().toString().length === 1
+      ? `0${date.getSeconds()}`
+      : date.getSeconds();
 
   return `${hours}:${minutes}:${seconds}`;
 }
 
 function renderTime() {
   timer.innerText = ("afterbegin", getTimeNow());
+}
+
+async function getWeatherIcon(iconId) {
+  try {
+    const res = await fetch(
+      `http://openweathermap.org/img/wn/${iconId}@2x.png`
+    );
+
+    /*     const data = res.json(); */
+    if (!res.ok) return;
+    const iconUrl = res.url;
+
+    return iconUrl;
+  } catch (err) {
+    console.log(err);
+  }
+}
+async function getWeather(lat, lon, units = "") {
+  try {
+    const res = await fetch(
+      `https://apis.scrimba.com/openweathermap/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}`
+    );
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    console.log(data);
+
+    const {
+      main: { temp },
+      name: location,
+    } = data;
+    const icon = await getWeatherIcon(data.weather[0].icon);
+    renderWeather(icon, weatherContainer, temp, location);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderWeather(iconUrl, parentEl, temp, location) {
+  const icon = `<img src=${iconUrl} alt='weather icon'/>`;
+
+  parentEl.insertAdjacentHTML("afterbegin", icon);
+  tempContainer.innerHTML = `<p class="temp">${Math.round(temp)}&#176;C</p>`;
+  locationContainer.innerText = location;
 }
 
 function getCurrentLocation() {
@@ -78,7 +129,7 @@ function getCurrentLocation() {
       coords: { latitude, longitude },
     } = data;
 
-    console.log(latitude, longitude);
+    getWeather(latitude, longitude, "metric");
   });
 }
 
